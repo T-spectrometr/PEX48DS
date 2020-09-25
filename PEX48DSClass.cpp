@@ -254,7 +254,7 @@ void PEX48DSClass::set_default_property()
 	//	Set Default Class Properties
 
 	//	Set Default device Properties
-	prop_name = "path_to_deviec";
+	prop_name = "path_to_device";
 	prop_desc = "Just path to device /dev/ixpio[n]";
 	prop_def  = "/dev/ixpio1";
 	vect_data.clear();

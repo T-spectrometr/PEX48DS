@@ -5,7 +5,7 @@
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at mail.ru - pshcyrill" author="pshcyrill" emailDomain="mail.ru" classFamily="CounterTimer" siteSpecific="" platform="All Platforms" bus="PCI Express" manufacturer="PEX48" reference=""/>
     </description>
-    <deviceProperties name="path_to_deviec" description="Just path to device /dev/ixpio[n]">
+    <deviceProperties name="path_to_device" description="Just path to device /dev/ixpio[n]">
       <type xsi:type="pogoDsl:StringType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <DefaultPropValue>/dev/ixpio1</DefaultPropValue>

@@ -57,6 +57,7 @@ Pex48Device::Pex48Device(std::string path_to_device) {
 }
 
 Pex48Device::~Pex48Device() {
+    std::cout << "close the device\n";
     sigaction(SIGALRM, &act_old, NULL);
     close(_fd);
 }

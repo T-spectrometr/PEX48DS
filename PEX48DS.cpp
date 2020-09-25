@@ -67,7 +67,7 @@ namespace PEX48DS_ns
 {
 /*----- PROTECTED REGION ID(PEX48DS::namespace_starting) ENABLED START -----*/
 
-//	static initializations
+    Pex48Device *PEX48DS::pex48 = nullptr;
 
 /*----- PROTECTED REGION END -----*/	//	PEX48DS::namespace_starting
 
@@ -133,18 +133,22 @@ void PEX48DS::init_device()
 	DEBUG_STREAM << "PEX48DS::init_device() create device " << device_name << endl;
 	/*----- PROTECTED REGION ID(PEX48DS::init_device_before) ENABLED START -----*/
 	
-	//	Initialization before get_device_property() call
-	
 	/*----- PROTECTED REGION END -----*/	//	PEX48DS::init_device_before
 	
 
 	//	Get the device properties from database
 	get_device_property();
-	
 	attr_value_read = new Tango::DevULong64[1];
 	/*----- PROTECTED REGION ID(PEX48DS::init_device) ENABLED START -----*/
-	
-	//	Initialize device
+
+	if(pex48!=nullptr) delete pex48;
+	pex48 = new Pex48Device(path_to_device);
+    if(pex48->getErrno()!=Pex48Device::ERR_OK){
+        device_status = "Error open device file!\n";
+        device_state = Tango::FAULT;
+    }else{
+        device_state = Tango::ON;
+    }
 	
 	/*----- PROTECTED REGION END -----*/	//	PEX48DS::init_device
 }
@@ -166,7 +170,7 @@ void PEX48DS::get_device_property()
 
 	//	Read device properties from database.
 	Tango::DbData	dev_prop;
-	dev_prop.push_back(Tango::DbDatum("path_to_deviec"));
+	dev_prop.push_back(Tango::DbDatum("path_to_device"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -181,16 +185,16 @@ void PEX48DS::get_device_property()
 			(static_cast<PEX48DSClass *>(get_device_class()));
 		int	i = -1;
 
-		//	Try to initialize path_to_deviec from class property
+		//	Try to initialize path_to_device from class property
 		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  path_to_deviec;
+		if (cl_prop.is_empty()==false)	cl_prop  >>  path_to_device;
 		else {
-			//	Try to initialize path_to_deviec from default device value
+			//	Try to initialize path_to_device from default device value
 			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  path_to_deviec;
+			if (def_prop.is_empty()==false)	def_prop  >>  path_to_device;
 		}
-		//	And try to extract path_to_deviec value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  path_to_deviec;
+		//	And try to extract path_to_device value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  path_to_device;
 
 	}
 
@@ -246,7 +250,8 @@ void PEX48DS::read_value(Tango::Attribute &attr)
 {
 	DEBUG_STREAM << "PEX48DS::read_value(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(PEX48DS::read_value) ENABLED START -----*/
-	//	Set the attribute value
+
+	*attr_value_read = pex48->getCounterValue();
 	attr.set_value(attr_value_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	PEX48DS::read_value
@@ -279,8 +284,12 @@ void PEX48DS::start()
 {
 	DEBUG_STREAM << "PEX48DS::Start()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(PEX48DS::start) ENABLED START -----*/
-	
-	//	Add your own code
+
+	if(pex48->getErrno()!=Pex48Device::ERR_OK){
+	    device_state = Tango::FAULT;
+	    return;
+	}
+	pex48->startCounter();
 	
 	/*----- PROTECTED REGION END -----*/	//	PEX48DS::start
 }
@@ -295,8 +304,12 @@ void PEX48DS::stop()
 {
 	DEBUG_STREAM << "PEX48DS::Stop()  - " << device_name << endl;
 	/*----- PROTECTED REGION ID(PEX48DS::stop) ENABLED START -----*/
-	
-	//	Add your own code
+
+    if(pex48->getErrno()!=Pex48Device::ERR_OK){
+        device_state = Tango::FAULT;
+        return;
+    }
+	pex48->stopCounter();
 	
 	/*----- PROTECTED REGION END -----*/	//	PEX48DS::stop
 }

@@ -43,14 +43,6 @@ private:
 
     static constexpr int CLOCK_INT_CW =                           0x1d;
 
-    enum Errors{
-        ERR_OK,
-        ERR_OPEN,
-        ERR_WRITE_REG,
-        ERR_READ_REG,
-        ERR_SIG
-    };
-
 
 protected:
     /* structuries for signal and action */
@@ -83,6 +75,14 @@ public:
 
 
     int getErrno(void){return _errno;}
+
+    enum Errors{
+        ERR_OK,
+        ERR_OPEN,
+        ERR_WRITE_REG,
+        ERR_READ_REG,
+        ERR_SIG
+    };
 
 };
 

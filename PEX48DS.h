@@ -36,6 +36,8 @@
 
 #include <tango.h>
 
+#include "Pex48Device.h"
+
 
 /*----- PROTECTED REGION END -----*/	//	PEX48DS.h
 
@@ -57,14 +59,16 @@ class PEX48DS : public TANGO_BASE_CLASS
 
 /*----- PROTECTED REGION ID(PEX48DS::Data Members) ENABLED START -----*/
 
-//	Add your own data members
+protected:
+
+    static Pex48Device *pex48;
 
 /*----- PROTECTED REGION END -----*/	//	PEX48DS::Data Members
 
 //	Device property data members
 public:
-	//	path_to_deviec:	Just path to device /dev/ixpio[n]
-	string	path_to_deviec;
+	//	path_to_device:	Just path to device /dev/ixpio[n]
+	string	path_to_device;
 
 //	Attribute data members
 public:
