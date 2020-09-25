@@ -83,7 +83,8 @@ void Pex48Device::startCounter() {
     counter_accamulate = 0;
     overflow = 0;
     /* set Signal action */
-    act.sa_handler = Pex48Device::sig_handler;
+    //act.sa_handler = Pex48Device::sig_handler;
+    act.sa_handler = (void (*)(int))sig_handler_addr;
     sigemptyset(&act.sa_mask);
     sigaddset(&act.sa_mask,SIGALRM);
     sigaction(SIGALRM,&act,&act_old);
@@ -106,11 +107,15 @@ void Pex48Device::startCounter() {
 
     writeRegister(CW_8254,0x36);               // Binary count counter0 mode 3
     setCounter1(0xffff);
+    std::cout << "start!\n";
+    is_start = true;
 }
 
 void Pex48Device::stopCounter() {
+    std::cout << "stop!\n";
     writeRegister(CW_8254,0x30);
     sigaction(SIGALRM, &act_old, NULL);
     counter_accamulate = (overflow<<16|getCounter1());
     setCounter1(0xffff);
+    is_start = false;
 }

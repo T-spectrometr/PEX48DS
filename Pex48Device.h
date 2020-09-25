@@ -53,7 +53,8 @@ protected:
     unsigned long counter_accamulate {0};
     static unsigned int overflow;
 
-    static void sig_handler(int isig);
+
+    void *sig_handler_addr;
 
     void setCounter1(uint16_t value);
     uint16_t getCounter1(void);
@@ -62,15 +63,24 @@ protected:
     void writeRegister(unsigned int regID, unsigned int value);
     unsigned int readRegister(unsigned int regID);
 
+    bool is_start=false;
+
 public:
     Pex48Device(std::string path_to_device);
     ~Pex48Device(void);
+
+    void setSigHandler(void *value){sig_handler_addr = value;}
+    static void sig_handler(int isig);
 
     void startCounter(void);
     void stopCounter(void);
 
     unsigned long getCounterValue(void){
-        return (overflow<<16|getCounter1());
+        if(is_start) {
+            return (overflow << 16 | getCounter1());
+        }else{
+            return counter_accamulate;
+        }
     }
 
 

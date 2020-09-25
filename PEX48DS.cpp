@@ -143,6 +143,8 @@ void PEX48DS::init_device()
 
 	if(pex48!=nullptr) delete pex48;
 	pex48 = new Pex48Device(path_to_device);
+	pex48->setSigHandler((void *)Pex48Device::sig_handler);
+
     if(pex48->getErrno()!=Pex48Device::ERR_OK){
         device_status = "Error open device file!\n";
         device_state = Tango::FAULT;
