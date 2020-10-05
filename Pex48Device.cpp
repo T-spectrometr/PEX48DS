@@ -41,7 +41,7 @@ unsigned int Pex48Device::readRegister(unsigned int regID){
 }
 
 /* Interrupt handler */
-void Pex48Device::sig_handler(int isig) {
+void Pex48Device::pex48_sig_handler(int isig) {
     overflow += 1;
     std::cout << "overflow: " << overflow << "\n";
 }
@@ -83,8 +83,10 @@ void Pex48Device::startCounter() {
     counter_accamulate = 0;
     overflow = 0;
     /* set Signal action */
-    //act.sa_handler = Pex48Device::sig_handler;
-    act.sa_handler = (void (*)(int))sig_handler_addr;
+    //act.sa_handler = (void (*)(int))2;
+    act.sa_handler = Pex48Device::pex48_sig_handler;
+    //act.sa_handler = (void (*)(int))sig_handler_addr;
+    //std::cout << "sa_handler: " << act.sa_handler << "\n";
     sigemptyset(&act.sa_mask);
     sigaddset(&act.sa_mask,SIGALRM);
     sigaction(SIGALRM,&act,&act_old);

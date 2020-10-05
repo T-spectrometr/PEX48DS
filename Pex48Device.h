@@ -70,7 +70,7 @@ public:
     ~Pex48Device(void);
 
     void setSigHandler(void *value){sig_handler_addr = value;}
-    static void sig_handler(int isig);
+    static void pex48_sig_handler(int isig);
 
     void startCounter(void);
     void stopCounter(void);
